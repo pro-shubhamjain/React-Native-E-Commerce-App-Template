@@ -1,0 +1,81 @@
+[
+  {
+    "General": {
+      "Sales Package":
+        "Laptop, Battery, Power Adaptor, User Guide, Warranty Documents",
+      "Model Number": "IP 320",
+      "Part Number": "80XL033MIN / 80XL03R8IH",
+      "Model Name": "IP 320",
+      "Series": "Ideapad",
+      "Color": "Onyx Black",
+      "Type": "Laptop",
+      "Suitable For": "Processing & Multitasking, Travel & Business",
+      "Battery Backup": "Upto 5 hours",
+      "Power Supply": "65 W AC Adapter",
+      "Battery Cell": "2 cell"
+    },
+    "Processor And Memory Features": {
+      "Dedicated Graphic Memory Type": "GDDR5",
+      "Dedicated Graphic Memory Capacity": "2 GB",
+      "Processor Brand": "Intel",
+      "Processor Name": "Core i5",
+      "Processor Generation": "7th Gen",
+      "SSD": "No",
+      "RAM": "8 GB",
+      "RAM Type": "DDR4",
+      "HDD Capacity": "1 TB",
+      "Processor Variant": "7200U",
+      "Clock Speed": "2.5 GHz with Turbo Boost Upto 3.1 GHz",
+      "Memory Slots": "2 Slots",
+      "Expandable Memory": "Upto 16 GB",
+      "Cache": "3 MB",
+      "RPM": "5400",
+      "Graphic Processor": "NVIDIA Geforce 940MX"
+    },
+    "Operating System": {
+      "OS Architecture": "64 bit",
+      "Operating System": "Windows 10 Home",
+      "System Architecture": "64 bit"
+    },
+    "Port And Slot Features": {
+      "Mic In": "Yes",
+      "RJ45": "Yes",
+      "USB Port": "1 x USB Type C, 2 x USB 3.0",
+      "HDMI Port": "1 x HDMI Port",
+      "Multi Card Slot": "4-in-1 Card Reader (SD, SDHC, SDXC, MMC)",
+      "Hardware Interface": "SATA"
+    },
+    "Display And Audio Features": {
+      "Touchscreen": "No",
+      "Screen Size": "15.6 inch",
+      "Screen Resolution": "1366 x 768 Pixel",
+      "Screen Type": "HD LED Backlit Anti-glare TN Display",
+      "Speakers": "Built-in Dual Speakers",
+      "Internal Mic": "Built-in Microphone",
+      "Sound Properties": "2 x 1.5 W Speakers with Dolby Audio"
+    },
+    "Connectivity Features": {
+      "Wireless LAN": "WIFI 1x1 AC",
+      "Bluetooth": "v4.1",
+      "Ethernet": "100/1000 Mbps"
+    },
+    "Dimensions": {
+      "Dimensions": "379 x 260 x 22.9 mm",
+      "Weight": "2.2 kg"
+    },
+    "Additional Features": {
+      "Disk Drive": "CD/DVD writer",
+      "Web Camera": "HD Webcam",
+      "Read/Write Speed": "8x",
+      "Keyboard": "Standard Keyboard",
+      "Pointer Device": "Touchpad"
+    },
+    "Warranty": {
+      "Warranty Summary": "1 Year Onsite Warranty",
+      "Warranty Service Type": "Onsite",
+      "Covered in Warranty": "Manufacturing Defects",
+      "Not Covered in Warranty": "Physical Damage",
+      "Domestic Warranty": "1 Year"
+    }
+  }
+]

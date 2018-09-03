@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "ecom-app",
+    "description": "This project is really great.",
+    "slug": "ecom-app",
+    "privacy": "public",
+    "sdkVersion": "28.0.0",
+    "platforms": ["ios", "android"],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.CAMERA_ROLL",
+        "android.permission.NOTIFICATIONS",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_INTERNAL_STORAGE",
+        "android.permission.WRITE_INTERNAL_STORAGE",
+        "android.permission.MANAGED_DOCUMENTS",
+        "android.permission.CHANGE_CONFIGURATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
+    }
+  }
+}

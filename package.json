@@ -1,0 +1,19 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ex-react-native-i18n": "0.0.4",
+    "expo": "^28.0.0",
+    "native-base": "2.6.1",
+    "react": "16.3.1",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
+    "react-native-loading-spinner-overlay": "^0.5.2",
+    "react-native-vector-icons": "^4.6.0",
+    "react-navigation": "^2.4.1",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0"
+  }
+}
