@@ -36,15 +36,15 @@ The benefit React Native offers is auto-updation during the changes made in the 
 <h3>Screen Shots</h3>
 <table>
 <tr>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/1.png" width="300"  height="500" alt="1"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/2.png" width="300"  height="500" alt="2"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/3.png" width="300"  height="500" alt="3"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/4.png" width="300"  height="500" alt="4"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/1.png" width="300"  height="500" alt="1"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/2.png" width="300"  height="500" alt="2"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/3.png" width="300"  height="500" alt="3"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/4.png" width="300"  height="500" alt="4"></td>
 </tr>
 <tr>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/5.png" width="300"  height="500" alt="5"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/6.png" width="300"  height="500" alt="6"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/7.png" width="300"  height="500" alt="7"></td>
-<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/ScreenShot/8.png" width="300"  height="500" alt="8"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/5.png" width="300"  height="500" alt="5"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/6.png" width="300"  height="500" alt="6"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/7.png" width="300"  height="500" alt="7"></td>
+<td><img src="https://github.com/sjain2393/React-Native-E-Commerce-App-Template/blob/master/ScreenShot/8.png" width="300"  height="500" alt="8"></td>
 </tr>
 </table>
