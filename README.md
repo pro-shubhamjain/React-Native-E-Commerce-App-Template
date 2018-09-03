@@ -16,7 +16,7 @@ The theme comes up with well structured layer, bright and simple look with the a
 <li>For Navigation throught the app use  react-navigation v2.</li>
 <li>For UI use Native-base Framework.</li>
 <li>.JSON files included for installing node_modules</li>
-
+</ul>
 <h3>React Native as platform:</h3>
 <p>
 Once you code using React Native there is no reason to select any other platform because in the current date React Native is considered as the fastest growing mobile app development trend. Being a semi hybrid mobile framework, it offers superior architecture and standard level components to use. Also it gives stable look to the apps maintaining high quality bar.
