@@ -1,13 +1,6 @@
-import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import Logins from "./Login";
-import { loginUser } from "src/action";
-
-class Login extends PureComponent {
-  render() {
-    return <Logins {...this.props} />;
-  }
-}
+import { loginUser, loginAsDemoUser } from "src/action";
 
 const mapStateToProps = ({ login, user }) => {
   const { message } = login;
@@ -15,7 +8,4 @@ const mapStateToProps = ({ login, user }) => {
   return { token, message };
 };
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(Logins);
+export default connect(mapStateToProps, { loginUser, loginAsDemoUser })(Logins);

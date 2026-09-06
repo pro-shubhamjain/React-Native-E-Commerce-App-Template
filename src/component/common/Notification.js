@@ -1,25 +1,18 @@
-import React, { Component } from "react";
-import { FlatList, Dimensions, Image, ListView } from "react-native";
+import React, { useState } from "react";
 import {
-  Container,
-  Content,
-  Card,
-  CardItem,
-  Text,
-  Left,
-  Right,
-  Button,
-  Icon,
-  Body,
-  List,
-  ListItem,
   View,
-  Header,
-  Title
-} from "native-base";
+  Text,
+  Image,
+  FlatList,
+  Pressable,
+  Dimensions,
+  StyleSheet
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 let { height } = Dimensions.get("window");
-const datas = [
+
+const initialData = [
   {
     title: "Desktop",
     note: "20% off all Desktop",
@@ -41,108 +34,117 @@ const datas = [
     logo: require("../../../assets/Images/desktop-logo.jpg")
   }
 ];
-export default class Notification extends Component {
-  constructor(props) {
-    super(props);
-    this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    this.state = {
-      basic: true,
-      listViewData: datas
-    };
-  }
-  deleteRow(secId, rowId, rowMap) {
-    rowMap[`${secId}${rowId}`].props.closeRow();
-    const newData = [...this.state.listViewData];
-    newData.splice(rowId, 1);
-    this.setState({ listViewData: newData });
-  }
-  render() {
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
 
-    return (
-      <Container style={{ backgroundColor: "white" }}>
-        <Header style={{ backgroundColor: "#2c8ef4" }}>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.navigate("Home")}
-            >
-              <Icon style={{ color: "white" }} name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={{ color: "white" }}>Notifications</Title>
-          </Body>
-          <Right />
-        </Header>
-        <View style={{ height: height - 80 }}>
-          <Content>
-            <List
-              dataSource={this.ds.cloneWithRows(this.state.listViewData)}
-              renderRow={data => (
-                <ListItem>
-                  <Card
-                    style={{
-                      elevation: 3,
-                      marginLeft: 25,
-                      marginRight: 15,
-                      marginBottom: 15,
-                      marginTop: 10
-                    }}
-                  >
-                    <CardItem>
-                      <Left>
-                        <Icon name="ios-notifications-outline" size={30} />
-                        <Body>
-                          <Text>{data.title}</Text>
-                          <Text note>{data.note}</Text>
-                        </Body>
-                      </Left>
-                    </CardItem>
-                    <CardItem cardBody>
-                      <Image
-                        style={{ height: 100, flex: 1 }}
-                        source={data.logo}
-                      />
-                    </CardItem>
-                    <CardItem>
-                      <Left>
-                        <Button iconLeft transparent danger>
-                          <Icon name="ios-trash" />
-                        </Button>
-                      </Left>
-                      <Text>Swip for action perform</Text>
-                      <Right>
-                        <Button iconLeft transparent primary>
-                          <Icon name="ios-cart" />
-                        </Button>
-                      </Right>
-                    </CardItem>
-                  </Card>
-                </ListItem>
-              )}
-              renderRightHiddenRow={data => (
-                <Button full onPress={() => alert(data.title)}>
-                  <Icon active name="ios-cart" />
-                </Button>
-              )}
-              renderLeftHiddenRow={(data, secId, rowId, rowMap) => (
-                <Button
-                  full
-                  danger
-                  onPress={_ => this.deleteRow(secId, rowId, rowMap)}
+export default function Notification({ navigation }) {
+  const [listData, setListData] = useState(initialData);
+
+  const deleteRow = title => {
+    setListData(prev => prev.filter(row => row.title !== title));
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Pressable style={styles.headerButton} onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back" size={22} color="white" />
+        </Pressable>
+        <Text style={styles.headerTitle}>Notifications</Text>
+        <View style={styles.headerButton} />
+      </View>
+      <View style={{ height: height - 80 }}>
+        <FlatList
+          data={listData}
+          keyExtractor={item => item.title}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <Ionicons name="notifications-outline" size={30} />
+                <View style={{ marginLeft: 8 }}>
+                  <Text>{item.title}</Text>
+                  <Text style={styles.note}>{item.note}</Text>
+                </View>
+              </View>
+              <Image style={styles.cardImage} source={item.logo} />
+              <View style={styles.cardFooter}>
+                <Pressable
+                  style={styles.footerButton}
+                  onPress={() => deleteRow(item.title)}
                 >
-                  <Icon active name="trash" />
-                </Button>
-              )}
-              leftOpenValue={75}
-              rightOpenValue={-75}
-            />
-          </Content>
-        </View>
-      </Container>
-    );
-  }
+                  <Ionicons name="trash" size={20} color="#ED4A6A" />
+                </Pressable>
+                <Text>Swipe for action perform</Text>
+                <Pressable
+                  style={styles.footerButton}
+                  onPress={() => alert(item.title)}
+                >
+                  <Ionicons name="cart" size={20} color="#2c8ef4" />
+                </Pressable>
+              </View>
+            </View>
+          )}
+        />
+      </View>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
+  header: {
+    height: 56,
+    backgroundColor: "#2c8ef4",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 8
+  },
+  headerButton: {
+    padding: 8,
+    minWidth: 38
+  },
+  headerTitle: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "600"
+  },
+  card: {
+    elevation: 3,
+    marginLeft: 25,
+    marginRight: 15,
+    marginBottom: 15,
+    marginTop: 10,
+    backgroundColor: "white",
+    borderRadius: 4,
+    padding: 12,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  note: {
+    color: "#8f8f8f"
+  },
+  cardImage: {
+    width: "100%",
+    height: 100,
+    marginTop: 8,
+    borderRadius: 4,
+    resizeMode: "cover"
+  },
+  cardFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8
+  },
+  footerButton: {
+    padding: 8
+  }
+});

@@ -1,30 +1,10 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import { View, Text, Image, TextInput, Pressable, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 import { Headers } from "../common";
-import { Dimensions, Image } from "react-native";
-let { height } = Dimensions.get("window");
-import {
-  Container,
-  Accordion,
-  View,
-  Card,
-  CardItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Icon,
-  Right,
-  Button,
-  Form,
-  Input,
-  Item,
-  Label,
-  Content,
-  Textarea
-} from "native-base";
-import { ImagePicker, Camera, Permissions } from "expo";
-import { localize } from "src/internationalization";
-const dataArray = [
+
+const addresses = [
   {
     title: "First Address",
     content: "Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet"
@@ -33,189 +13,217 @@ const dataArray = [
   { title: "Third Address", content: "No Input" }
 ];
 
-export default class Account extends Component {
-  constructor(props) {
-    super(props);
-    this.props.testapi();
-    this.state = {
-      image: null,
-      hasCameraPermission: null,
-      type: Camera.Constants.Type.back,
-      name: "",
-      email: "",
-      mobile: "",
-      password: ""
-    };
-  }
-  _renderHeader(title, expanded) {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          padding: 10,
-          justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "white"
-        }}
-      >
-        <Text style={{ fontWeight: "600", color: "black" }}> {title}</Text>
-        {expanded ? (
-          <Icon style={{ fontSize: 18 }} name="remove-circle" />
-        ) : (
-          <Icon style={{ fontSize: 18 }} name="add-circle" />
-        )}
-      </View>
-    );
-  }
-  _renderContent(content) {
-    return (
-      <Text
-        style={{
-          backgroundColor: "#CCCCCC",
-          padding: 10,
-          fontStyle: "italic",
-          color: "white"
-        }}
-      >
-        {content}
-      </Text>
-    );
-  }
+function AddressAccordion() {
+  const [expanded, setExpanded] = useState(null);
 
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+  return (
+    <View>
+      {addresses.map((address, index) => {
+        const isExpanded = expanded === index;
+        return (
+          <View key={address.title}>
+            <Pressable
+              style={styles.accordionHeader}
+              onPress={() => setExpanded(isExpanded ? null : index)}
+            >
+              <Text style={styles.accordionTitle}>{address.title}</Text>
+              <Ionicons name={isExpanded ? "remove-circle" : "add-circle"} size={18} />
+            </Pressable>
+            {isExpanded ? (
+              <Text style={styles.accordionContent}>{address.content}</Text>
+            ) : null}
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
+export default function Account({ navigation, msg, testapi }) {
+  useEffect(() => {
+    testapi();
+  }, []);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [image, setImage] = useState(null);
+
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3]
     });
-
-    console.log(result);
-
-    // if (!result.cancelled) {
-    //   this.setState({ image: result.uri });
-    // }
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
 
-  render() {
-    let { image } = this.state;
-    return (
-      <Container style={{ backgroundColor: "white" }}>
-        <Headers routes={this.props.navigation} />
-        <Content>
-          <Content padder>
-            <Card>
-              <CardItem>
-                <Left>
-                  <Thumbnail
-                    style={{ marginRight: 5 }}
-                    square
-                    source={{
-                      uri:
-                        "https://facebook.github.io/react-native/docs/assets/favicon.png"
-                    }}
-                  />
-                  <Button small bordered>
-                    <Icon name="ios-settings" />
-                  </Button>
-                </Left>
+  return (
+    <View style={styles.container}>
+      <Headers routes={navigation} />
+      <View style={styles.card}>
+        <View style={styles.profileRow}>
+          <View style={styles.avatarGroup}>
+            <Pressable onPress={pickImage}>
+              {image ? (
+                <Image style={styles.avatar} source={{ uri: image }} />
+              ) : (
+                <View style={[styles.avatar, styles.avatarPlaceholder]}>
+                  <Ionicons name="person" size={24} color="white" />
+                </View>
+              )}
+            </Pressable>
+            <Pressable style={styles.settingsButton}>
+              <Ionicons name="settings" size={16} />
+            </Pressable>
+          </View>
+          <View style={styles.balanceGroup}>
+            <Text style={styles.note}>Balance</Text>
+            <Text style={styles.note}>INR: 1000</Text>
+          </View>
+        </View>
 
-                <Right>
-                  <Body style={{ alignItems: "flex-start" }}>
-                    <Text note>Ballance</Text>
-                    <Text note>INR: 1000 </Text>
-                  </Body>
-                </Right>
-              </CardItem>
-              <Form>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-person-outline" />
-                      <Label>Jhon Deo</Label>
-                      <Input
-                        text={this.state.name}
-                        onChangeText={text => {
-                          this.setState({
-                            name: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-mail-outline" />
-                      <Label>Jhon@TrueRuse.com</Label>
-                      <Input
-                        text={this.state.email}
-                        onChangeText={text => {
-                          this.setState({
-                            email: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-call-outline" />
-                      <Label>+91-9000900099</Label>
-                      <Input
-                        text={this.state.mobile}
-                        onChangeText={text => {
-                          this.setState({
-                            mobile: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-lock-outline" />
-                      <Label>**********</Label>
-                      <Input
-                        secureTextEntry={true}
-                        text={this.state.password}
-                        onChangeText={text => {
-                          this.setState({
-                            password: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Content>
-                    <Button
-                      block
-                      onPress={() => {
-                        console.log("msg -->", this.props);
-                        alert(this.props.msg);
-                      }}
-                    >
-                      <Text>Save</Text>
-                    </Button>
-                  </Content>
-                </CardItem>
-              </Form>
-              <CardItem footer bordered>
-                <Accordion
-                  dataArray={dataArray}
-                  renderHeader={this._renderHeader}
-                  renderContent={this._renderContent}
-                />
-              </CardItem>
-            </Card>
-          </Content>
-        </Content>
-      </Container>
-    );
-  }
+        <View style={styles.formItem}>
+          <Ionicons name="person-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>Jhon Deo</Text>
+            <TextInput style={styles.input} value={name} onChangeText={setName} />
+          </View>
+        </View>
+        <View style={styles.formItem}>
+          <Ionicons name="mail-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>Jhon@TrueRuse.com</Text>
+            <TextInput style={styles.input} value={email} onChangeText={setEmail} />
+          </View>
+        </View>
+        <View style={styles.formItem}>
+          <Ionicons name="call-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>+91-9000900099</Text>
+            <TextInput style={styles.input} value={mobile} onChangeText={setMobile} />
+          </View>
+        </View>
+        <View style={styles.formItem}>
+          <Ionicons name="lock-closed-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>**********</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+        </View>
+
+        <Pressable style={styles.button} onPress={() => alert(msg)}>
+          <Text style={styles.buttonText}>Save</Text>
+        </Pressable>
+
+        <AddressAccordion />
+      </View>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
+  card: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 4,
+    backgroundColor: "white",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  profileRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16
+  },
+  avatarGroup: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 4,
+    marginRight: 8
+  },
+  avatarPlaceholder: {
+    backgroundColor: "#2c8ef4",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  settingsButton: {
+    borderWidth: 1,
+    borderColor: "#2c8ef4",
+    borderRadius: 4,
+    padding: 6
+  },
+  balanceGroup: {
+    alignItems: "flex-start"
+  },
+  note: {
+    color: "#8f8f8f"
+  },
+  formItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingVertical: 8
+  },
+  formField: {
+    flex: 1,
+    marginLeft: 12
+  },
+  label: {
+    fontSize: 12,
+    color: "#8f8f8f"
+  },
+  input: {
+    fontSize: 16,
+    paddingVertical: 4
+  },
+  button: {
+    backgroundColor: "#2c8ef4",
+    borderRadius: 4,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginVertical: 16
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "600"
+  },
+  accordionHeader: {
+    flexDirection: "row",
+    padding: 10,
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "white",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee"
+  },
+  accordionTitle: {
+    fontWeight: "600"
+  },
+  accordionContent: {
+    backgroundColor: "#CCCCCC",
+    padding: 10,
+    fontStyle: "italic",
+    color: "white"
+  }
+});

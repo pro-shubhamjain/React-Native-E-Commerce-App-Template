@@ -1,49 +1,34 @@
-import React, { PureComponent } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Root } from "native-base";
-import Expo from "expo";
-import { setBaseURL, setCustomHeaders } from "./apis";
+import { NavigationContainer } from "@react-navigation/native";
+import Constants from "expo-constants";
 
+import { setBaseURL, setCustomHeaders } from "./apis";
 import AppNavigator from "./navigation/AppNavigator";
 
-class Routing extends PureComponent {
-  constructor(props) {
-    super(props);
-    setBaseURL("http://localhost:5000/api");
-    if (props.token) {
-      setCustomHeaders([
-        {
-          name: "Authorization",
-          value: props.token
-        }
-      ]);
-    }
-    this.state = {
-      isReady: false
-    };
-  }
+// On a physical device (Expo Go), "localhost" points at the phone itself, not
+// the dev machine. Derive the dev machine's LAN IP from the Metro/Expo dev
+// server's own host so the mock backend is reachable from a real device too.
+function getApiBaseUrl() {
+  const hostUri = Constants.expoConfig?.hostUri;
+  const host = hostUri ? hostUri.split(":")[0] : "localhost";
+  return `http://${host}:5000/api`;
+}
 
-  async componentWillMount() {
-    await Expo.Font.loadAsync({
-      Roboto: require("../assets/Fonts/roboto/Roboto-Regular.ttf"),
-      Roboto_medium: require("../assets/Fonts/roboto/Roboto-Medium.ttf"),
-      Ionicons: require("../assets/Icons/ionicons/fonts/ionicons.ttf")
-    });
-    this.setState({ isReady: true });
-  }
-
-  render() {
-    if (!this.state.isReady) {
-      return <Expo.AppLoading />;
+function Routing({ token }) {
+  useEffect(() => {
+    setBaseURL(getApiBaseUrl());
+    if (token) {
+      setCustomHeaders([{ name: "Authorization", value: token }]);
     }
-    console.log("TOKEN", this.props.token);
-    let Navigator = AppNavigator(this.props.token ? "Main" : "Authentication");
-    return (
-      <Root>
-        <Navigator />
-      </Root>
-    );
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <AppNavigator token={token} />
+    </NavigationContainer>
+  );
 }
 
 const mapStateToProps = ({ user }) => {
@@ -51,7 +36,4 @@ const mapStateToProps = ({ user }) => {
   return { token };
 };
 
-export default connect(
-  mapStateToProps,
-  {}
-)(Routing);
+export default connect(mapStateToProps, {})(Routing);

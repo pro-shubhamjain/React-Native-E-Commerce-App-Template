@@ -1,261 +1,274 @@
-import React, { Component } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  Container,
-  Content,
-  Form,
-  Item,
-  Input,
-  Label,
-  Button,
-  Text,
-  Icon,
-  Card,
-  CardItem,
-  Body,
-  Right,
-  Left,
   View,
-  Toast
-} from "native-base";
-
-import { TouchableWithoutFeedback, Modal } from "react-native";
+  Text,
+  TextInput,
+  Pressable,
+  Modal,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+  StyleSheet
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { cancelRequest, setCustomHeaders } from "src/apis";
-import Spinner from "react-native-loading-spinner-overlay";
 
-export default class Logins extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      modalVisible: false,
-      checkToken: false
-    };
-    console.log(props);
-  }
+export default function Logins({
+  token,
+  message,
+  loading,
+  navigation,
+  loginUser,
+  loginAsDemoUser
+}) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
 
-  componentWillReceiveProps(newProps) {
-    if (
-      !this.props.token &&
-      newProps.token &&
-      this.props.token !== newProps.token
-    ) {
-      setCustomHeaders([
-        {
-          name: "Authorization",
-          value: newProps.token
-        }
-      ]);
-      // this.props.navigation.navigate("Home");
-    } else if (newProps.message) {
-      Toast.show({
-        text: "Please input valid credentials!!!",
-        textStyle: { textAlign: "center" },
-        type: "danger",
-        duration: 3000
-      });
+  const prevToken = useRef(token);
+  const prevMessage = useRef(message);
+
+  useEffect(() => {
+    if (!prevToken.current && token && prevToken.current !== token) {
+      setCustomHeaders([{ name: "Authorization", value: token }]);
+    } else if (message && message !== prevMessage.current) {
+      alert(message);
     }
-  }
+    prevToken.current = token;
+    prevMessage.current = message;
+  }, [token, message]);
 
-  componentWillUnmount() {
-    cancelRequest();
-  }
+  useEffect(() => {
+    return () => cancelRequest();
+  }, []);
 
-  forgetpwd() {
-    return (
-      <Modal
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          flex: 1
-        }}
-        visible={this.state.modalVisible}
-        transparent={true}
-        onRequestClose={() => this._onCloseModal()}
-      >
-        <TouchableWithoutFeedback
-          style={{ flex: 1 }}
-          onPress={() => {
-            this._onCloseModal();
-          }}
+  return (
+    <View style={styles.container}>
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>SIGN IN</Text>
+
+        <View style={styles.formItem}>
+          <Ionicons name="mail-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>Email Id / Mobile Number</Text>
+            <TextInput
+              style={styles.input}
+              autoCapitalize="none"
+              editable={!loading}
+              value={email}
+              onChangeText={setEmail}
+            />
+          </View>
+        </View>
+
+        <View style={styles.formItem}>
+          <Ionicons name="lock-closed-outline" size={20} />
+          <View style={styles.formField}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              style={styles.input}
+              secureTextEntry
+              editable={!loading}
+              value={password}
+              onChangeText={setPassword}
+            />
+          </View>
+        </View>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(true)}>
+          <Text numberOfLines={1} style={styles.forgotPassword}>
+            Forgot password?
+          </Text>
+        </TouchableWithoutFeedback>
+
+        <Pressable
+          disabled={loading}
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={() => loginUser({ email, password })}
         >
-          <View style={{ flex: 1, backgroundColor: "#0007" }}>
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <Text style={styles.buttonText}>Sign In</Text>
+          )}
+        </Pressable>
+
+        <Pressable
+          disabled={loading}
+          style={styles.demoButton}
+          onPress={() => loginAsDemoUser()}
+        >
+          <Text style={styles.demoButtonText}>Continue as Demo User</Text>
+        </Pressable>
+
+        <View style={styles.footerRow}>
+          <Text>Don't have an account? </Text>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("Register")}
+          >
+            <Text numberOfLines={1} style={styles.link}>
+              Sign up
+            </Text>
+          </TouchableWithoutFeedback>
+        </View>
+      </View>
+
+      <Modal
+        visible={modalVisible}
+        transparent
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalBackdrop}>
             <View
-              style={{ height: 350 }}
-              onStartShouldSetResponder={() => {
-                return true;
-              }}
+              style={styles.modalCard}
+              onStartShouldSetResponder={() => true}
             >
-              <Card
-                style={{
-                  marginTop: 100,
-                  marginLeft: 20,
-                  marginRight: 20
-                }}
-              >
-                <CardItem header>
-                  <Body>
-                    <Text
-                      style={{
-                        fontWeight: "500",
-                        fontSize: 16,
-                        alignSelf: "center",
-                        paddingBottom: 10
-                      }}
-                    >
-                      Forget Password
-                    </Text>
-                    <Text style={{ fontSize: 14 }}>
-                      Check your email. After you enter your email, an email
-                      will be sent to your Issuu-associated email address. Click
-                      Set a new password, and you will be redirected to a page
-                      where you can enter a new password.
-                    </Text>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-mail-outline" />
-                      <Label>Email Id</Label>
-                      <Input
-                        text={this.state.email}
-                        onChangeText={text => {
-                          this.setState({
-                            email: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem footer>
-                  <Left>
-                    <Button small bordered onPress={() => this._onCloseModal()}>
-                      <Text>Cancel</Text>
-                    </Button>
-                  </Left>
-                  <Right>
-                    <Button small bordered onPress={() => { }}>
-                      <Text>Confirm</Text>
-                    </Button>
-                  </Right>
-                </CardItem>
-              </Card>
+              <Text style={styles.modalTitle}>Forget Password</Text>
+              <Text style={styles.modalBody}>
+                Check your email. After you enter your email, an email will be
+                sent to your Issuu-associated email address. Click Set a new
+                password, and you will be redirected to a page where you can
+                enter a new password.
+              </Text>
+              <View style={styles.formItem}>
+                <Ionicons name="mail-outline" size={20} />
+                <View style={styles.formField}>
+                  <Text style={styles.label}>Email Id</Text>
+                  <TextInput style={styles.input} value={email} onChangeText={setEmail} />
+                </View>
+              </View>
+              <View style={styles.modalActions}>
+                <Pressable
+                  style={styles.smallButton}
+                  onPress={() => setModalVisible(false)}
+                >
+                  <Text>Cancel</Text>
+                </Pressable>
+                <Pressable style={styles.smallButton} onPress={() => {}}>
+                  <Text>Confirm</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    );
-  }
-
-  _onCloseModal() {
-    this.setState({
-      modalVisible: false
-    });
-  }
-
-  render() {
-    return (
-      <Container style={{ marginTop: 70 }}>
-        <Spinner visible={this.props.loading} />
-        <Content>
-          <Content padder>
-            <Card>
-              <CardItem bordered>
-                <Content contentContainerStyle={{ alignSelf: "center" }}>
-                  <CardItem header bordered>
-                    <Text>SIGN IN</Text>
-                  </CardItem>
-                </Content>
-              </CardItem>
-              <Form>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-mail-outline" />
-                      <Label>Email Id / Mobie Number</Label>
-                      <Input
-                        autoCapitalize="none"
-                        text={this.state.email}
-                        onChangeText={text => {
-                          this.setState({
-                            email: text
-                          });
-                        }}
-                      />
-                    </Item>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Body>
-                    <Item floatingLabel>
-                      <Icon active name="ios-lock-outline" />
-                      <Label>Password</Label>
-                      <Input
-                        secureTextEntry={true}
-                        text={this.state.password}
-                        onChangeText={text => {
-                          this.setState({
-                            password: text
-                          });
-                        }}
-                      />
-                    </Item>
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        this.setState({
-                          modalVisible: true
-                        });
-                      }}
-                    >
-                      <Text
-                        numberOfLines={1}
-                        style={{
-                          paddingTop: 5,
-                          marginLeft: 190
-                        }}
-                      >
-                        Forgot password?
-                      </Text>
-                    </TouchableWithoutFeedback>
-                  </Body>
-                </CardItem>
-                <CardItem>
-                  <Content>
-                    <Button
-                      block
-                      onPress={() => {
-                        this.props.navigation.navigate("Home");
-                        this.props.loginUser({
-                          email: this.state.email,
-                          password: this.state.password
-                        });
-                      }}
-                    >
-                      <Text>Sign In</Text>
-                    </Button>
-                  </Content>
-                </CardItem>
-              </Form>
-              <CardItem footer bordered>
-                <Text>Don't have an account?</Text>
-                <TouchableWithoutFeedback
-                  onPress={() => this.props.navigation.navigate("Register")}
-                >
-                  <Text
-                    numberOfLines={1}
-                    style={{ paddingLeft: 5, textDecorationLine: "underline" }}
-                  >
-                    Sign up
-                  </Text>
-                </TouchableWithoutFeedback>
-              </CardItem>
-            </Card>
-          </Content>
-        </Content>
-        <View>{this.forgetpwd()}</View>
-      </Container>
-    );
-  }
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: 70,
+    backgroundColor: "white"
+  },
+  card: {
+    margin: 16,
+    padding: 16,
+    borderRadius: 4,
+    backgroundColor: "white",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 }
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    alignSelf: "center",
+    marginBottom: 16
+  },
+  formItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingVertical: 8
+  },
+  formField: {
+    flex: 1,
+    marginLeft: 12
+  },
+  label: {
+    fontSize: 12,
+    color: "#8f8f8f"
+  },
+  input: {
+    fontSize: 16,
+    paddingVertical: 4
+  },
+  forgotPassword: {
+    alignSelf: "flex-end",
+    paddingTop: 8
+  },
+  button: {
+    backgroundColor: "#2c8ef4",
+    borderRadius: 4,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 16
+  },
+  buttonDisabled: {
+    opacity: 0.6
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "600"
+  },
+  demoButton: {
+    borderRadius: 4,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: "#2c8ef4",
+    borderStyle: "dashed"
+  },
+  demoButtonText: {
+    color: "#2c8ef4",
+    fontWeight: "600"
+  },
+  footerRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 16
+  },
+  link: {
+    textDecorationLine: "underline"
+  },
+  modalBackdrop: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0007"
+  },
+  modalCard: {
+    width: "85%",
+    marginTop: 100,
+    backgroundColor: "white",
+    borderRadius: 4,
+    padding: 16
+  },
+  modalTitle: {
+    fontWeight: "500",
+    fontSize: 16,
+    alignSelf: "center",
+    paddingBottom: 10
+  },
+  modalBody: {
+    fontSize: 14,
+    marginBottom: 16
+  },
+  modalActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 16
+  },
+  smallButton: {
+    borderWidth: 1,
+    borderColor: "#2c8ef4",
+    borderRadius: 4,
+    paddingVertical: 6,
+    paddingHorizontal: 16
+  }
+});

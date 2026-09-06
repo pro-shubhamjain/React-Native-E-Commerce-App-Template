@@ -1,204 +1,110 @@
-import React, { Component } from "react";
-import { TouchableWithoutFeedback, Dimensions } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text, Pressable, Dimensions, StyleSheet } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 import { logout } from "src/action";
-import {
-  Container,
-  Thumbnail,
-  Content,
-  List,
-  ListItem,
-  Separator,
-  Button,
-  Text,
-  Left,
-  Body,
-  Icon,
-  Right,
-  View
-} from "native-base";
-let { height } = Dimensions.get("window");
-class SideBar extends Component {
-  componentWillReceiveProps(newProps) {
-    if (!this.props.token && newProps.token) {
-      this.props.navigation.navigate("Login");
-    }
-  }
 
-  render() {
-    return (
-      <Container style={{ backgroundColor: "white" }}>
-        <View
-          style={{
-            backgroundColor: "#2c8ef4",
-            height: 150,
-            alignItems: "center"
-          }}
-        >
-          <Thumbnail
-            style={{ marginTop: 40 }}
-            source={{
-              uri:
-                "https://facebook.github.io/react-native/docs/assets/favicon.png"
-            }}
-          />
-          <Text style={{ marginTop: 5, color: "white" }}>
-            {this.props.name}
-          </Text>
-          <Text style={{ marginTop: 5, color: "white" }}>
-            {this.props.email}
-          </Text>
+let { height } = Dimensions.get("window");
+
+const MENU_ITEMS = [
+  { icon: "reorder-three-outline", label: "Your Orders" },
+  { icon: "folder-open-outline", label: "Wallet" },
+  { icon: "card-outline", label: "Saved Cards" },
+  { separator: true },
+  { icon: "trophy-outline", label: "Refer N Earn" },
+  { icon: "film-outline", label: "My Coupons" },
+  { separator: true },
+  { icon: "help-circle-outline", label: "Help And Support" },
+  { icon: "settings-outline", label: "Settings" },
+  { separator: true },
+  { icon: "document-text-outline", label: "Abouts Us" },
+  { icon: "clipboard-outline", label: "Terms And Service" }
+];
+
+function SideBar({ token, name, email, navigation, logout }) {
+  const prevToken = useRef(token);
+  useEffect(() => {
+    if (!prevToken.current && token) {
+      navigation.navigate("Login");
+    }
+    prevToken.current = token;
+  }, [token]);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.profile}>
+        <View style={styles.avatar}>
+          <Ionicons name="person-circle" size={40} color="white" />
         </View>
-        <View
-          style={{
-            height: height - 150
-          }}
-        >
-          <Content>
-            <List
-              style={{
-                backgroundColor: "white"
-              }}
-            >
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-reorder-outline" />
-                </Left>
-                <Body>
-                  <Text>Your Orders</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-folder-open-outline" />
-                </Left>
-                <Body>
-                  <Text>Wallet</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-card-outline" />
-                </Left>
-                <Body>
-                  <Text>Saved Cards</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <Separator style={{ height: 10 }} />
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-trophy-outline" />
-                </Left>
-                <Body>
-                  <Text>Refer N Earn</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-film-outline" />
-                </Left>
-                <Body>
-                  <Text>My Coupons</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <Separator style={{ height: 10 }} />
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-help-circle-outline" />
-                </Left>
-                <Body>
-                  <Text>Help And Support</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-settings-outline" />
-                </Left>
-                <Body>
-                  <Text>Settings</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <Separator style={{ height: 10 }} />
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-paper-outline" />
-                </Left>
-                <Body>
-                  <Text>Abouts Us</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-clipboard-outline" />
-                </Left>
-                <Body>
-                  <Text>Terms And Service</Text>
-                </Body>
-                <Right>
-                  <Icon name="arrow-forward" />
-                </Right>
-              </ListItem>
-              <Separator style={{ height: 10 }} />
-              <ListItem icon>
-                <Left>
-                  <Icon name="ios-exit-outline" />
-                </Left>
-                <Body>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      this.props.logout();
-                    }}
-                  >
-                    <Text
-                      style={{
-                        paddingLeft: 5,
-                        textDecorationLine: "underline"
-                      }}
-                    >
-                      Sign Out
-                    </Text>
-                  </TouchableWithoutFeedback>
-                </Body>
-                <Right />
-              </ListItem>
-            </List>
-          </Content>
+        <Text style={styles.profileText}>{name}</Text>
+        <Text style={styles.profileText}>{email}</Text>
+      </View>
+      <View style={{ height: height - 150 }}>
+        {MENU_ITEMS.map((item, index) =>
+          item.separator ? (
+            <View key={`sep-${index}`} style={styles.separator} />
+          ) : (
+            <View key={item.label} style={styles.listItem}>
+              <Ionicons name={item.icon} size={20} />
+              <Text style={styles.listItemText}>{item.label}</Text>
+              <Ionicons name="arrow-forward" size={18} />
+            </View>
+          )
+        )}
+        <View style={styles.listItem}>
+          <Ionicons name="log-out-outline" size={20} />
+          <Pressable onPress={() => logout()}>
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </Pressable>
         </View>
-      </Container>
-    );
-  }
+      </View>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "white"
+  },
+  profile: {
+    backgroundColor: "#2c8ef4",
+    height: 150,
+    alignItems: "center"
+  },
+  avatar: {
+    marginTop: 40,
+    width: 40,
+    height: 40,
+    borderRadius: 20
+  },
+  profileText: {
+    marginTop: 5,
+    color: "white"
+  },
+  listItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 16
+  },
+  listItemText: {
+    flex: 1,
+    marginLeft: 16
+  },
+  signOutText: {
+    marginLeft: 16,
+    textDecorationLine: "underline"
+  },
+  separator: {
+    height: 10,
+    backgroundColor: "#f0f0f0"
+  }
+});
 
 const mapStateToProps = ({ user }) => {
   const { email, name, token } = user;
   return { email, name, token };
 };
 
-export default connect(
-  mapStateToProps,
-  { logout }
-)(SideBar);
+export default connect(mapStateToProps, { logout })(SideBar);

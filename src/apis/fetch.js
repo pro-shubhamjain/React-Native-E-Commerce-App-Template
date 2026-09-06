@@ -57,10 +57,12 @@ export const fetch = (requestType, resourceURL, parameters) => {
             resolve(response.data);
           })
           .catch(error => {
-            if (error.response.data.email) {
+            if (error.response?.data?.email) {
               reject(error.response.data.email);
-            } else if (error.response.data.password) {
+            } else if (error.response?.data?.password) {
               reject(error.response.data.password);
+            } else {
+              reject(error.message || "Network error");
             }
           });
       });

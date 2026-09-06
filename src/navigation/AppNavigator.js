@@ -1,18 +1,21 @@
-import { createSwitchNavigator } from "react-navigation";
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import AuthNavigator from "./AuthNavigator";
 import DrawerNavigator from "./DrawerNavigator";
-import SiteNavigator from "./SiteNavigator";
+import Notification from "../component/common/Notification";
 
-export default initialRouteName =>
-  createSwitchNavigator(
-    {
-      Authentication: { screen: AuthNavigator },
-      Main: { screen: DrawerNavigator },
-      Site: { screen: SiteNavigator }
-    },
-    {
-      initialRouteName,
-      headerMode: "none"
-    }
+const Stack = createNativeStackNavigator();
+
+export default function AppNavigator({ token }) {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {token ? (
+        <Stack.Screen name="Main" component={DrawerNavigator} />
+      ) : (
+        <Stack.Screen name="Authentication" component={AuthNavigator} />
+      )}
+      <Stack.Screen name="Notify" component={Notification} />
+    </Stack.Navigator>
   );
+}

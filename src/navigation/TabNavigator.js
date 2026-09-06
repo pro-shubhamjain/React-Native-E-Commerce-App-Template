@@ -1,130 +1,42 @@
 import React from "react";
-import { Platform } from "react-native";
-import { Button, Icon, Text, Badge } from "native-base";
-import {
-  createStackNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "src/component/homeScreen";
 import AccountScreen from "src/component/AccountScreen";
 import WishlistScreen from "src/component/WishlistScreen/WishlistScreen";
 import CartScreen from "src/component/CartScreen/CartScreen";
 
-const HomeStack = createStackNavigator(
-  {
-    Home: HomeScreen
-  },
-  { headerMode: "none" }
-);
+const Tab = createBottomTabNavigator();
 
-HomeStack.navigationOptions = {
-  tabBarLabel: ({ focused }) => (
-    <Text style={{ color: focused ? "white" : "#D3D3D3" }}>Home</Text>
-  ),
-  tabBarIcon: ({ focused }) => (
-    <Icon
-      name={
-        Platform.OS === "ios"
-          ? `ios-home${focused ? "" : "-outline"}`
-          : "md-home"
-      }
-      style={{
-        color: focused ? "white" : "#D3D3D3"
-      }}
-    />
-  )
+const TAB_ICONS = {
+  Home: "home",
+  Wishlist: "heart",
+  Cart: "cart",
+  Account: "person"
 };
 
-const AccountStack = createStackNavigator(
-  {
-    Account: AccountScreen
-  },
-  { headerMode: "none" }
-);
-
-AccountStack.navigationOptions = {
-  tabBarLabel: ({ focused }) => (
-    <Text style={{ color: focused ? "white" : "#D3D3D3" }}>Account</Text>
-  ),
-  tabBarIcon: ({ focused }) => (
-    <Icon
-      name={
-        Platform.OS === "ios"
-          ? `ios-person${focused ? "" : "-outline"}`
-          : "md-person"
-      }
-      style={{
-        color: focused ? "white" : "#D3D3D3"
-      }}
-    />
-  ),
-  headerMode: "none"
-};
-
-const WishlistStack = createStackNavigator(
-  {
-    Wishlist: WishlistScreen
-  },
-  { headerMode: "none" }
-);
-
-WishlistStack.navigationOptions = {
-  tabBarLabel: ({ focused }) => (
-    <Text style={{ color: focused ? "white" : "#D3D3D3" }}>Wishlist</Text>
-  ),
-  tabBarIcon: ({ focused }) => (
-    <Icon
-      name={
-        Platform.OS === "ios"
-          ? `ios-heart${focused ? "" : "-outline"}`
-          : "md-heart"
-      }
-      style={{
-        color: focused ? "white" : "#D3D3D3"
-      }}
-    />
-  ),
-  headerMode: "none"
-};
-
-const CartStack = createStackNavigator(
-  {
-    Cart: CartScreen
-  },
-  { headerMode: "none" }
-);
-
-CartStack.navigationOptions = {
-  tabBarLabel: ({ focused }) => (
-    <Text style={{ color: focused ? "white" : "#D3D3D3" }}>Cart</Text>
-  ),
-  tabBarIcon: ({ focused }) => (
-    <Icon
-      name={
-        Platform.OS === "ios"
-          ? `ios-cart${focused ? "" : "-outline"}`
-          : "md-cart"
-      }
-      style={{
-        color: focused ? "white" : "#D3D3D3"
-      }}
-    />
-  )
-};
-
-export default createBottomTabNavigator(
-  {
-    HomeStack,
-    WishlistStack,
-    CartStack,
-    AccountStack
-  },
-  {
-    tabBarOptions: {
-      style: {
-        backgroundColor: "#2c8ef4"
-      }
-    }
-  }
-);
+export default function TabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "#D3D3D3",
+        tabBarStyle: { backgroundColor: "#2c8ef4" },
+        tabBarIcon: ({ focused, color, size }) => (
+          <Ionicons
+            name={`${TAB_ICONS[route.name]}${focused ? "" : "-outline"}`}
+            color={color}
+            size={size}
+          />
+        )
+      })}
+    >
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Wishlist" component={WishlistScreen} />
+      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
+    </Tab.Navigator>
+  );
+}

@@ -15,3 +15,6 @@ export const LOGOUT = "LOGOUT";
 export const TESTAPI = "TESTAPI";
 export const TESTAPI_SUCCESS = "TESTAPI_SUCCESS";
 export const TESTAPI_FAIL = "TESTAPI_FAIL";
+
+export const ADD_TO_CART = "ADD_TO_CART";
+export const REMOVE_FROM_CART = "REMOVE_FROM_CART";

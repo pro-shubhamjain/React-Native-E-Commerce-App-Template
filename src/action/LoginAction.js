@@ -27,3 +27,16 @@ export const loginUser = ({ email, password }) => {
       });
   };
 };
+
+// Logs in without hitting the network, so the app can be explored without a
+// backend running. See the "Continue as Demo User" button on the Login screen.
+export const loginAsDemoUser = () => {
+  return dispatch => {
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: {
+        token: "demo-token"
+      }
+    });
+  };
+};

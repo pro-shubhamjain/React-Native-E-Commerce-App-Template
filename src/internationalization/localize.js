@@ -1,14 +1,15 @@
-import I18n from "ex-react-native-i18n";
+import { I18n } from "i18n-js";
+import * as Localization from "expo-localization";
 
 import { enResourceStrings } from "./en";
 import { frResourceStrings } from "./fr";
 
-export const localize = text => {
-  I18n.fallbacks = true;
-  I18n.translations = {
-    en: enResourceStrings,
-    "en-GB": enResourceStrings,
-    "fr-FR": frResourceStrings
-  };
-  return I18n.t(text);
-};
+const i18n = new I18n({
+  en: enResourceStrings,
+  fr: frResourceStrings
+});
+
+i18n.enableFallback = true;
+i18n.locale = Localization.getLocales()[0]?.languageCode ?? "en";
+
+export const localize = text => i18n.t(text);

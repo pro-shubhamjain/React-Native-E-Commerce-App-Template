@@ -3,10 +3,12 @@ import LoginReducer from "./LoginReducer";
 import RegisterReducer from "./RegisterReducer";
 import UserReducer from "./UserReducer";
 import AccountReducer from "./AccountReducer";
+import CartReducer from "./CartReducer";
 
 export default combineReducers({
   login: LoginReducer,
   register: RegisterReducer,
   user: UserReducer,
-  account: AccountReducer
+  account: AccountReducer,
+  cart: CartReducer
 });
